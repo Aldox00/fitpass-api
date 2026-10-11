@@ -44,7 +44,7 @@ public class FitpassApplication {
             System.out.println("\n=== CONSUMO DE API TERCEROS (GEOLOCALIZACIÓN DE GIMNASIOS) ===");
             try {
                 String datosUbicacion = geoService.geolocalizarSucursal("Tuxtla Gutierrez");
-                System.out.println("✅ GEOLOCALIZACIÓN DE SUCURSAL FITPASS (NOMINATIM / OSM):");
+                System.out.println(" GEOLOCALIZACIÓN DE SUCURSAL FITPASS (NOMINATIM / OSM):");
                 System.out.println("   " + datosUbicacion);
             } catch (Exception e) {
                 System.err.println("Error en geolocalización: " + e.getMessage());

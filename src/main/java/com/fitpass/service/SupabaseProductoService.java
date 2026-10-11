@@ -2,6 +2,7 @@ package com.fitpass.service;
 
 import com.fitpass.dto.CrearProductoRequest;
 import com.fitpass.dto.ProductoDTO;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -13,7 +14,7 @@ public class SupabaseProductoService {
 
     private final RestClient restClient;
 
-    public SupabaseProductoService(RestClient restClient) {
+    public SupabaseProductoService(@Qualifier("supabaseRestClient") RestClient restClient) {
         this.restClient = restClient;
     }
 
@@ -30,10 +31,7 @@ public class SupabaseProductoService {
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<ProductoDTO>>() {});
 
-        if (resultado == null || resultado.isEmpty()) {
-            throw new RuntimeException("Producto no encontrado con ID: " + id);
-        }
-        return resultado.get(0);
+        return (resultado != null && !resultado.isEmpty()) ? resultado.get(0) : null;
     }
 
     public ProductoDTO crear(CrearProductoRequest request) {
@@ -48,8 +46,6 @@ public class SupabaseProductoService {
     }
 
     public ProductoDTO actualizar(Long id, CrearProductoRequest request) {
-        obtenerPorId(id);
-
         List<ProductoDTO> resultado = restClient.patch()
                 .uri("/productos?id=eq." + id)
                 .header("Prefer", "return=representation")
@@ -61,8 +57,6 @@ public class SupabaseProductoService {
     }
 
     public void eliminar(Long id) {
-        obtenerPorId(id);
-
         restClient.delete()
                 .uri("/productos?id=eq." + id)
                 .retrieve()

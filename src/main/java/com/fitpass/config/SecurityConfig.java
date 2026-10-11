@@ -21,6 +21,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/usuarios/**").permitAll()
                         .requestMatchers("/api/v1/productos/**").permitAll()
+                        .requestMatchers("/api/v1/geolocalizacion/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
