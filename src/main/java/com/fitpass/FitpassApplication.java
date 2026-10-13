@@ -2,7 +2,9 @@ package com.fitpass;
 
 import com.fitpass.client.FitPassClientExample;
 import com.fitpass.client.GeolocalizacionGimnasioService;
+import com.fitpass.dto.UbicacionResponseDTO;
 import com.fitpass.dto.UsuarioResponse;
+import com.fitpass.service.GeolocalizacionServiceOfuscado;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,7 +20,10 @@ public class FitpassApplication {
     }
 
     @Bean
-    public CommandLineRunner runClientExamples(FitPassClientExample client, GeolocalizacionGimnasioService geoService) {
+    public CommandLineRunner runClientExamples(
+            FitPassClientExample client,
+            GeolocalizacionGimnasioService geoService,
+            GeolocalizacionServiceOfuscado geoServiceOfuscado) {
         return args -> {
             System.out.println("\n=== INICIANDO CONSUMO CLIENTE DE API FITPASS ===");
 
@@ -48,6 +53,20 @@ public class FitpassApplication {
                 System.out.println("   " + datosUbicacion);
             } catch (Exception e) {
                 System.err.println("Error en geolocalización: " + e.getMessage());
+            }
+
+            System.out.println("\n=== CONSUMO DESDE CLASE OFUSCADA (MÉTODOS RENOMBRADOS + BASE64) ===");
+            try {
+                List<UbicacionResponseDTO> listaOfuscada = geoServiceOfuscado.a("Tuxtla Gutierrez");
+                if (!listaOfuscada.isEmpty()) {
+                    System.out.println(" PRUEBA OFUSCADA EXITOSA (.a() -> Base64 Decode /search):");
+                    System.out.println("   Registros recuperados: " + listaOfuscada.size());
+                    System.out.println("   Muestra: " + listaOfuscada.get(0).direccionCompleta());
+                } else {
+                    System.out.println(" Consulta ofuscada ejecutada sin resultados.");
+                }
+            } catch (Exception e) {
+                System.err.println("Error en servicio ofuscado: " + e.getMessage());
             }
 
             System.out.println("=======\n");

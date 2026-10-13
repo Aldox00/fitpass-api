@@ -20,7 +20,7 @@ public class NominatimClientConfig {
                 .baseUrl(nominatimUrl)
                 .defaultHeader("User-Agent", userAgent)
                 .defaultHeader("Accept", "application/json")
-                .defaultHeader("Accept-Language", "es") // Hace que Nominatim responda en español
+                .defaultHeader("Accept-Language", "es")
                 .build();
     }
 }
