@@ -23,6 +23,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/productos/**").permitAll()
                         .requestMatchers("/api/v1/geolocalizacion/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/api/v1/gimnasios/**").permitAll()
+                        .requestMatchers("/api/v1/pases/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
