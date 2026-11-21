@@ -19,11 +19,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/usuarios/**").permitAll()
+                        .requestMatchers("/api/v1/usuarios/**").permitAll()
                         .requestMatchers("/api/v1/productos/**").permitAll()
                         .requestMatchers("/api/v1/geolocalizacion/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/v1/gimnasios/**").permitAll()
+                        .requestMatchers("/api/v1/membresias/**").permitAll()
                         .requestMatchers("/api/v1/pases/**").permitAll()
                         .anyRequest().authenticated()
                 );

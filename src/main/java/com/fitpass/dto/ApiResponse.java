@@ -1,8 +1,17 @@
 package com.fitpass.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Estructura estándar de respuesta para endpoints de FitPass")
 public class ApiResponse<T> {
+
+    @Schema(description = "Indica si la operación fue exitosa", example = "true")
     private boolean exito;
+
+    @Schema(description = "Mensaje descriptivo del resultado", example = "Operación realizada correctamente")
     private String mensaje;
+
+    @Schema(description = "Datos devueltos por la operación")
     private T datos;
 
     public ApiResponse() {}

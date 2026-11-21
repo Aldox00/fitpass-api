@@ -1,7 +1,6 @@
 package com.fitpass.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,35 +11,35 @@ public class Pase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "gimnasio_id", nullable = false)
     private Gimnasio gimnasio;
 
-    @Column(name = "fecha_checkin", nullable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "membresia_id", nullable = false)
+    private Membresia membresia;
+
+    @Column(name = "fecha_checkin", nullable = false)
     private LocalDateTime fechaCheckIn;
 
-    @Column(nullable = false)
-    private String estado; // "VALIDO", "CANCELADO"
+    @Column(name = "fecha_checkout")
+    private LocalDateTime fechaCheckOut;
 
-    @PrePersist
-    protected void onCreate() {
-        this.fechaCheckIn = LocalDateTime.now();
-        if (this.estado == null) {
-            this.estado = "VALIDO";
-        }
-    }
+    @Column(name = "estado", nullable = false)
+    private String estado = "ACTIVO";
 
     public Pase() {}
 
-    public Pase(Usuario usuario, Gimnasio gimnasio) {
+    public Pase(Usuario usuario, Gimnasio gimnasio, Membresia membresia) {
         this.usuario = usuario;
         this.gimnasio = gimnasio;
+        this.membresia = membresia;
+        this.fechaCheckIn = LocalDateTime.now();
+        this.estado = "ACTIVO";
     }
 
     public Long getId() { return id; }
@@ -52,8 +51,14 @@ public class Pase {
     public Gimnasio getGimnasio() { return gimnasio; }
     public void setGimnasio(Gimnasio gimnasio) { this.gimnasio = gimnasio; }
 
+    public Membresia getMembresia() { return membresia; }
+    public void setMembresia(Membresia membresia) { this.membresia = membresia; }
+
     public LocalDateTime getFechaCheckIn() { return fechaCheckIn; }
     public void setFechaCheckIn(LocalDateTime fechaCheckIn) { this.fechaCheckIn = fechaCheckIn; }
+
+    public LocalDateTime getFechaCheckOut() { return fechaCheckOut; }
+    public void setFechaCheckOut(LocalDateTime fechaCheckOut) { this.fechaCheckOut = fechaCheckOut; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }

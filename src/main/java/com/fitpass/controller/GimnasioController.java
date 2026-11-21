@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -31,6 +30,16 @@ public class GimnasioController {
             lista = gimnasioService.obtenerTodosActivos();
         }
         return ResponseEntity.ok(new ApiResponse<>(true, "Gimnasios recuperados exitosamente", lista));
+    }
+
+    @GetMapping("/cercanos")
+    public ResponseEntity<ApiResponse<List<Gimnasio>>> obtenerCercanos(
+            @RequestParam Double latitud,
+            @RequestParam Double longitud,
+            @RequestParam(defaultValue = "5.0") Double radioKm) {
+
+        List<Gimnasio> cercanos = gimnasioService.buscarCercanos(latitud, longitud, radioKm);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Gimnasios cercanos encontrados correctamente", cercanos));
     }
 
     @PostMapping

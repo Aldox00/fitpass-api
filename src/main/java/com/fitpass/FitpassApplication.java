@@ -18,7 +18,8 @@ public class FitpassApplication {
     public static void main(String[] args) {
         SpringApplication.run(FitpassApplication.class, args);
     }
-
+}
+/*
     @Bean
     public CommandLineRunner runClientExamples(
             FitPassClientExample client,
@@ -73,3 +74,4 @@ public class FitpassApplication {
         };
     }
 }
+*/
