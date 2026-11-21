@@ -1,0 +1,2492 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Productos",
+      "description": "Gestión del catálogo y stock de la tienda FitPass"
+    },
+    {
+      "name": "Membresías",
+      "description": "Asignación, confirmación de pagos y generación de pase QR"
+    }
+  ],
+  "paths": {
+    "/api/v1/usuarios/hacer-admin": {
+      "put": {
+        "tags": [
+          "usuario-controller"
+        ],
+        "operationId": "promoverAdmin",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseUsuario"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{id}": {
+      "put": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Actualizar producto",
+        "description": "Actualiza los datos y existencias de un producto existente por su ID.",
+        "operationId": "actualizarProducto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearProductoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Producto no encontrado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Producto actualizado correctamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseProducto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Eliminar producto",
+        "description": "Elimina un producto del catálogo por su ID.",
+        "operationId": "eliminarProducto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Producto no encontrado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Producto eliminado exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/membresias/confirmar-pago/{membresiaId}": {
+      "put": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Confirmar pago por ID de membresía",
+        "description": "Activa una membresía pendiente mediante su ID.",
+        "operationId": "confirmarPagoMembresia",
+        "parameters": [
+          {
+            "name": "membresiaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMembresia"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/membresias/confirmar-pago-usuario/{usuarioId}": {
+      "put": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Confirmar pago por ID de usuario",
+        "description": "Activa la última membresía pendiente de un usuario.",
+        "operationId": "confirmarPagoPorUsuarioId",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMembresia"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/membresias/confirmar-pago-por-correo": {
+      "put": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Confirmar pago por correo",
+        "description": "Activa la última membresía pendiente de un usuario buscando por email.",
+        "operationId": "confirmarPagoPorCorreo",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMembresia"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/productos": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Listar productos",
+        "description": "Obtiene todos los productos disponibles en el inventario.",
+        "operationId": "obtenerProductos",
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Productos recuperados correctamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListProducto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Crear producto",
+        "description": "Registra un nuevo producto validando nombre único, precio positivo y stock no negativo.",
+        "operationId": "crearProducto",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearProductoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos o producto duplicado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Producto creado exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseProducto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pases/checkout/{usuarioId}": {
+      "post": {
+        "tags": [
+          "pase-controller"
+        ],
+        "operationId": "realizarCheckOut",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponsePase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pases/checkin": {
+      "post": {
+        "tags": [
+          "pase-controller"
+        ],
+        "operationId": "realizarCheckIn",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponsePase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/membresias/asignar": {
+      "post": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Asignar membresía",
+        "description": "Genera una solicitud de membresía pendiente de pago para un usuario, evitando duplicados activos o pendientes.",
+        "operationId": "asignarMembresia",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tipoPase",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Tipo de pase inválido, usuario no encontrado o ya existe membresía activa/pendiente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Solicitud de membresía generada",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMembresia"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/gimnasios": {
+      "get": {
+        "tags": [
+          "gimnasio-controller"
+        ],
+        "operationId": "listarGimnasios",
+        "parameters": [
+          {
+            "name": "ciudad",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListGimnasio"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "gimnasio-controller"
+        ],
+        "operationId": "crearGimnasio",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GimnasioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseGimnasio"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "restablecerPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "registrar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseUsuarioResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseUsuarioResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/google": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "loginConGoogle",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseUsuarioResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "solicitarRecuperacion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/usuarios/perfil/{id}": {
+      "get": {
+        "tags": [
+          "usuario-controller"
+        ],
+        "operationId": "obtenerPerfil",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMapStringObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pases/usuario/{usuarioId}": {
+      "get": {
+        "tags": [
+          "pase-controller"
+        ],
+        "operationId": "obtenerHistorialUsuario",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListPase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pases/gimnasio/{gimnasioId}/reporte-hoy": {
+      "get": {
+        "tags": [
+          "pase-controller"
+        ],
+        "operationId": "obtenerReporteDiario",
+        "parameters": [
+          {
+            "name": "gimnasioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMapStringObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/membresias/usuario/{usuarioId}": {
+      "get": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Obtener membresía actual",
+        "description": "Consulta la membresía más reciente registrada de un usuario.",
+        "operationId": "obtenerMembresiaActivaUsuario",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMembresia"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/membresias/usuario/{usuarioId}/historial": {
+      "get": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Historial de membresías",
+        "description": "Lista todas las membresías anteriores y actuales de un usuario.",
+        "operationId": "obtenerHistorialMembresias",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListMembresia"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/membresias/generar-qr/{usuarioId}": {
+      "get": {
+        "tags": [
+          "Membresías"
+        ],
+        "summary": "Generar pase QR",
+        "description": "Devuelve los datos del QR si el usuario tiene una membresía activa y pagada.",
+        "operationId": "generarPaseQr",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMapStringObject"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/gimnasios/cercanos": {
+      "get": {
+        "tags": [
+          "gimnasio-controller"
+        ],
+        "operationId": "obtenerCercanos",
+        "parameters": [
+          {
+            "name": "latitud",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "longitud",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "radioKm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 5.0
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListGimnasio"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/geolocalizacion/reversa": {
+      "get": {
+        "tags": [
+          "geolocalizacion-controller"
+        ],
+        "operationId": "reversa",
+        "parameters": [
+          {
+            "name": "latitud",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "longitud",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UbicacionResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/geolocalizacion/gimnasios": {
+      "get": {
+        "tags": [
+          "geolocalizacion-controller"
+        ],
+        "operationId": "buscarGimnasios",
+        "parameters": [
+          {
+            "name": "ciudad",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UbicacionResponseDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/geolocalizacion/buscar": {
+      "get": {
+        "tags": [
+          "geolocalizacion-controller"
+        ],
+        "operationId": "buscar",
+        "parameters": [
+          {
+            "name": "direccion",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Recurso no encontrado o condición de negocio no cumplida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Argumento inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno inesperado en el servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UbicacionResponseDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Código HTTP de error",
+            "format": "int32",
+            "example": 400
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Detalle del error ocurrido",
+            "example": "El usuario ya tiene una membresía activa vigente"
+          },
+          "ruta": {
+            "type": "string",
+            "description": "Ruta del endpoint solicitado",
+            "example": "/api/v1/membresias/asignar"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Fecha y hora del error",
+            "format": "date-time"
+          }
+        },
+        "description": "Respuesta estándar para errores HTTP (4xx y 5xx)"
+      },
+      "ApiResponseUsuario": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "$ref": "#/components/schemas/Usuario"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "rol": {
+            "type": "string"
+          }
+        },
+        "description": "Datos devueltos por la operación"
+      },
+      "CrearProductoRequest": {
+        "required": [
+          "nombre",
+          "precio",
+          "stock"
+        ],
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "precio": {
+            "minimum": 0.01,
+            "exclusiveMinimum": false,
+            "type": "number"
+          },
+          "stock": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ApiResponseProducto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "$ref": "#/components/schemas/Producto"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "Producto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "stock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "icono": {
+            "type": "string"
+          }
+        },
+        "description": "Datos devueltos por la operación"
+      },
+      "ApiResponseMembresia": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "$ref": "#/components/schemas/Membresia"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "Membresia": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/Usuario"
+          },
+          "tipoPase": {
+            "type": "string"
+          },
+          "fechaInicio": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaFin": {
+            "type": "string",
+            "format": "date"
+          },
+          "activa": {
+            "type": "boolean"
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "estadoPago": {
+            "type": "string"
+          }
+        },
+        "description": "Datos devueltos por la operación"
+      },
+      "ApiResponsePase": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "$ref": "#/components/schemas/Pase"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "Gimnasio": {
+        "required": [
+          "direccion",
+          "latitud",
+          "longitud",
+          "nombre"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "ciudad": {
+            "type": "string"
+          },
+          "latitud": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitud": {
+            "type": "number",
+            "format": "double"
+          },
+          "esActivo": {
+            "type": "boolean"
+          },
+          "creadoEn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Pase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/Usuario"
+          },
+          "gimnasio": {
+            "$ref": "#/components/schemas/Gimnasio"
+          },
+          "membresia": {
+            "$ref": "#/components/schemas/Membresia"
+          },
+          "fechaCheckIn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaCheckOut": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estado": {
+            "type": "string"
+          }
+        },
+        "description": "Datos devueltos por la operación"
+      },
+      "CheckInRequest": {
+        "required": [
+          "gimnasioId",
+          "usuarioId"
+        ],
+        "type": "object",
+        "properties": {
+          "usuarioId": {
+            "type": "integer",
+            "description": "ID del usuario que realiza el check-in",
+            "format": "int64",
+            "example": 1
+          },
+          "gimnasioId": {
+            "type": "integer",
+            "description": "ID del gimnasio destino",
+            "format": "int64",
+            "example": 1
+          }
+        },
+        "description": "Solicitud para registrar el acceso (check-in) de un usuario a un gimnasio"
+      },
+      "GimnasioRequest": {
+        "required": [
+          "direccion",
+          "latitud",
+          "longitud",
+          "nombre"
+        ],
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre del gimnasio",
+            "example": "FitPass Centro"
+          },
+          "direccion": {
+            "type": "string",
+            "description": "Dirección física del gimnasio",
+            "example": "Av. Central Norte #120"
+          },
+          "ciudad": {
+            "type": "string",
+            "description": "Ciudad donde se ubica el gimnasio",
+            "example": "Tuxtla Gutiérrez"
+          },
+          "latitud": {
+            "type": "number",
+            "description": "Latitud geográfica",
+            "format": "double",
+            "example": 16.7516
+          },
+          "longitud": {
+            "type": "number",
+            "description": "Longitud geográfica",
+            "format": "double",
+            "example": -93.1161
+          }
+        },
+        "description": "Datos para registrar o actualizar un gimnasio"
+      },
+      "ApiResponseGimnasio": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "$ref": "#/components/schemas/Gimnasio"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "ApiResponseVoid": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "type": "object",
+            "description": "Datos devueltos por la operación"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "RegisterRequest": {
+        "required": [
+          "email",
+          "nombre",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre completo del usuario",
+            "example": "Aldo Arroyo"
+          },
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico del usuario",
+            "example": "aldo@fitpass.com"
+          },
+          "password": {
+            "maxLength": 2147483647,
+            "minLength": 6,
+            "type": "string",
+            "description": "Contraseña (mínimo 6 caracteres)",
+            "example": "ClaveSegura123"
+          },
+          "rol": {
+            "type": "string",
+            "description": "Rol asignado al usuario",
+            "example": "USUARIO",
+            "enum": [
+              "USUARIO",
+              "ADMIN",
+              "RECEPCION"
+            ]
+          }
+        },
+        "description": "Datos para registrar una nueva cuenta en FitPass"
+      },
+      "ApiResponseUsuarioResponse": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "$ref": "#/components/schemas/UsuarioResponse"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "UsuarioResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID único del usuario",
+            "format": "int64",
+            "example": 1
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre del usuario",
+            "example": "Aldo Arroyo"
+          },
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico",
+            "example": "aldo@fitpass.com"
+          },
+          "rol": {
+            "type": "string",
+            "description": "Rol del usuario en el sistema",
+            "example": "USUARIO"
+          }
+        },
+        "description": "Datos públicos del usuario autenticado o consultado"
+      },
+      "LoginRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico registrado",
+            "example": "usuario@fitpass.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña del usuario",
+            "example": "Password123!"
+          }
+        },
+        "description": "Credenciales para iniciar sesión en FitPass"
+      },
+      "GoogleLoginRequest": {
+        "required": [
+          "idToken"
+        ],
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "ID Token emitido por Google Sign-In",
+            "example": "eyJhbGciOiJSUzI1NiIsImtpZCI6..."
+          }
+        },
+        "description": "Solicitud de inicio de sesión mediante token de Google"
+      },
+      "ApiResponseMapStringObject": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Datos devueltos por la operación"
+            },
+            "description": "Datos devueltos por la operación"
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "ApiResponseListProducto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "type": "array",
+            "description": "Datos devueltos por la operación",
+            "items": {
+              "$ref": "#/components/schemas/Producto"
+            }
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "ApiResponseListPase": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "type": "array",
+            "description": "Datos devueltos por la operación",
+            "items": {
+              "$ref": "#/components/schemas/Pase"
+            }
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "ApiResponseListMembresia": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "type": "array",
+            "description": "Datos devueltos por la operación",
+            "items": {
+              "$ref": "#/components/schemas/Membresia"
+            }
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "ApiResponseListGimnasio": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado",
+            "example": "Operación realizada correctamente"
+          },
+          "datos": {
+            "type": "array",
+            "description": "Datos devueltos por la operación",
+            "items": {
+              "$ref": "#/components/schemas/Gimnasio"
+            }
+          }
+        },
+        "description": "Estructura estándar de respuesta para endpoints de FitPass"
+      },
+      "UbicacionResponseDTO": {
+        "type": "object",
+        "properties": {
+          "place_id": {
+            "type": "integer",
+            "description": "Identificador del lugar",
+            "format": "int64",
+            "example": 987654321
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Dirección completa devuelta por el proveedor",
+            "example": "Villa Corzo, Chiapas, México"
+          },
+          "lat": {
+            "type": "string",
+            "description": "Latitud en texto",
+            "example": "16.1833"
+          },
+          "lon": {
+            "type": "string",
+            "description": "Longitud en texto",
+            "example": "-93.2667"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo de ubicación",
+            "example": "administrative"
+          },
+          "importance": {
+            "type": "number",
+            "description": "Relevancia del resultado",
+            "format": "double",
+            "example": 0.65
+          }
+        },
+        "description": "Respuesta de geocodificación obtenida desde el servicio de mapas"
+      }
+    }
+  }
+}
