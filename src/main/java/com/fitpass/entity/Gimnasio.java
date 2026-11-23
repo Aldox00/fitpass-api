@@ -2,7 +2,6 @@ package com.fitpass.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,14 +23,6 @@ public class Gimnasio {
     @Column(length = 100)
     private String ciudad;
 
-    @NotNull(message = "La latitud es obligatoria")
-    @Column(nullable = false)
-    private Double latitud;
-
-    @NotNull(message = "La longitud es obligatoria")
-    @Column(nullable = false)
-    private Double longitud;
-
     @Column(name = "es_activo")
     private Boolean esActivo = true;
 
@@ -45,12 +36,10 @@ public class Gimnasio {
 
     public Gimnasio() {}
 
-    public Gimnasio(String nombre, String direccion, String ciudad, Double latitud, Double longitud) {
+    public Gimnasio(String nombre, String direccion, String ciudad) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.ciudad = ciudad;
-        this.latitud = latitud;
-        this.longitud = longitud;
     }
 
     public Long getId() { return id; }
@@ -64,12 +53,6 @@ public class Gimnasio {
 
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }
-
-    public Double getLatitud() { return latitud; }
-    public void setLatitud(Double latitud) { this.latitud = latitud; }
-
-    public Double getLongitud() { return longitud; }
-    public void setLongitud(Double longitud) { this.longitud = longitud; }
 
     public Boolean getEsActivo() { return esActivo; }
     public void setEsActivo(Boolean esActivo) { this.esActivo = esActivo; }
