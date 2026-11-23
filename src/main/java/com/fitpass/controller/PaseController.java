@@ -5,6 +5,7 @@ import com.fitpass.dto.ApiResponse;
 import com.fitpass.dto.CheckInRequest;
 import com.fitpass.entity.Pase;
 import com.fitpass.service.PaseService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/pases")
+@CrossOrigin(origins = "*")
 public class PaseController {
 
     private final PaseService paseService;
@@ -23,6 +25,7 @@ public class PaseController {
         this.paseService = paseService;
     }
 
+    // REGISTRAR ENTRADA
     @PostMapping("/checkin")
     public ResponseEntity<ApiResponse<Pase>> realizarCheckIn(
             @Valid @RequestBody CheckInRequest request) {
@@ -47,6 +50,7 @@ public class PaseController {
         }
     }
 
+    // REGISTRAR SALIDA
     @PostMapping("/checkout/{usuarioId}")
     public ResponseEntity<ApiResponse<Pase>> realizarCheckOut(
             @PathVariable Long usuarioId) {
@@ -72,6 +76,7 @@ public class PaseController {
         }
     }
 
+    // CONSULTAR ESTADO DEL QR
     @GetMapping("/estado-qr/{usuarioId}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> obtenerEstadoQr(
             @PathVariable Long usuarioId) {
@@ -98,6 +103,7 @@ public class PaseController {
         }
     }
 
+    // ESCANEAR QR
     @PostMapping("/escanear")
     public ResponseEntity<ApiResponse<Pase>> escanearQr(
             @RequestBody Map<String, Object> body) {
@@ -132,6 +138,7 @@ public class PaseController {
         }
     }
 
+    // REPORTE DIARIO DEL GIMNASIO
     @GetMapping("/gimnasio/{gimnasioId}/reporte-hoy")
     public ResponseEntity<ApiResponse<Map<String, Object>>> obtenerReporteDiario(
             @PathVariable Long gimnasioId) {
@@ -158,6 +165,7 @@ public class PaseController {
         }
     }
 
+    // HISTORIAL DEL USUARIO
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<ApiResponse<List<Pase>>> obtenerHistorialUsuario(
             @PathVariable Long usuarioId) {
