@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,66 @@ public class PaseController {
                             "Check-Out realizado exitosamente en FitPass. ¡Hasta luego!",
                             pase
                     )
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(
+                            false,
+                            e.getMessage(),
+                            null
+                    ));
+        }
+    }
+
+    @GetMapping("/estado-qr/{usuarioId}")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> obtenerEstadoQr(
+            @PathVariable Long usuarioId) {
+
+        try {
+            Map<String, Object> estado =
+                    paseService.obtenerEstadoQr(usuarioId);
+
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true,
+                            "Estado QR obtenido",
+                            estado
+                    )
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(
+                            false,
+                            e.getMessage(),
+                            null
+                    ));
+        }
+    }
+
+    @PostMapping("/escanear")
+    public ResponseEntity<ApiResponse<Pase>> escanearQr(
+            @RequestBody Map<String, Object> body) {
+
+        try {
+            String codigoQr = body.get("codigoQr") != null
+                    ? body.get("codigoQr").toString()
+                    : null;
+
+            Long gimnasioId = body.get("gimnasioId") != null
+                    ? Long.parseLong(body.get("gimnasioId").toString())
+                    : 1L;
+
+            Pase resultado =
+                    paseService.procesarEscaneoQr(codigoQr, gimnasioId);
+
+            String msg = resultado.getFechaCheckOut() == null
+                    ? "ENTRADA registrada correctamente"
+                    : "SALIDA registrada correctamente";
+
+            return ResponseEntity.ok(
+                    new ApiResponse<>(true, msg, resultado)
             );
 
         } catch (RuntimeException e) {
