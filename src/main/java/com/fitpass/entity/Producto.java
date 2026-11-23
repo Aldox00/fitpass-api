@@ -11,21 +11,15 @@ public class Producto {
     private Long id;
 
     private String nombre;
-    private String descripcion;
     private Double precio;
     private Integer stock;
-    private String categoria;
-    private String icono;
 
     public Producto() {}
 
-    public Producto(String nombre, String descripcion, Double precio, Integer stock, String categoria, String icono) {
+    public Producto(String nombre, Double precio, Integer stock) {
         this.nombre = nombre;
-        this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
-        this.categoria = categoria;
-        this.icono = icono;
     }
 
     public Long getId() {
@@ -44,14 +38,6 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public Double getPrecio() {
         return precio;
     }
@@ -66,21 +52,5 @@ public class Producto {
 
     public void setStock(Integer stock) {
         this.stock = stock;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public String getIcono() {
-        return icono;
-    }
-
-    public void setIcono(String icono) {
-        this.icono = icono;
     }
 }
