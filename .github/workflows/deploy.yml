@@ -22,12 +22,12 @@ jobs:
       mysql-test:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASS }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
           MYSQL_DATABASE: fitpass_test
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -p${{ secrets.TEST_DB_PASS }}"
+          --health-cmd="mysqladmin ping -h localhost -uroot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -50,7 +50,7 @@ jobs:
         env:
           DB_URL: jdbc:mysql://127.0.0.1:3306/fitpass_test?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
           DB_USER: root
-          DB_PASS: ${{ secrets.TEST_DB_PASS }}
+          DB_PASS: ""
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: mvn test -B
