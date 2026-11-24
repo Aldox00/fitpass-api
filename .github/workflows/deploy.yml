@@ -1,0 +1,84 @@
+name: FitPass CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/ci-cd-pipeline
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Build, Test & Package (Java 17)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql-test:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: fitpass_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: 1. Checkout del código fuente
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar JDK 17 con caché de Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: 3. Validación y compilación del proyecto
+        run: mvn validate compile -B
+
+      - name: 4. Ejecución de pruebas con Maven
+        env:
+          DB_URL: jdbc:mysql://127.0.0.1:3306/fitpass_test?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          DB_USER: root
+          DB_PASS: ""
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: mvn test -B
+
+      - name: 5. Empaquetado de artefacto JAR (Spring Boot + ProGuard)
+        run: mvn package -DskipTests -B
+
+      - name: 6. Publicar artefacto compilado
+        uses: actions/upload-artifact@v4
+        with:
+          name: fitpass-backend-jar
+          path: target/*.jar
+          retention-days: 7
+
+  cd:
+    name: Deploy to Railway Production
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: 1. Checkout del código verificado
+        uses: actions/checkout@v4
+
+      - name: 2. Instalar Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: 3. Desplegar servicio web en Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service "${{ secrets.RAILWAY_SERVICE }}" --detach
