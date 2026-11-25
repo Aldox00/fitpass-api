@@ -152,6 +152,40 @@ public class ProductoController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Producto actualizado correctamente", actualizado));
     }
 
+    @PutMapping("/{id}/descontar-stock")
+    @Operation(
+            summary = "Descontar stock por venta",
+            description = "Resta la cantidad vendida al stock actual del producto."
+    )
+    public ResponseEntity<ApiResponse<Producto>> descontarStock(
+            @PathVariable Long id,
+            @RequestParam int cantidad) {
+
+        if (cantidad <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(false, "La cantidad a descontar debe ser mayor a 0", null));
+        }
+
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+
+        int stockActual = producto.getStock() != null ? producto.getStock() : 0;
+        if (stockActual < cantidad) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(
+                            false,
+                            "Stock insuficiente. Disponible: " + stockActual + ", solicitado: " + cantidad,
+                            null
+                    ));
+        }
+
+        producto.setStock(stockActual - cantidad);
+        Producto actualizado = productoRepository.save(producto);
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Stock descontado correctamente", actualizado)
+        );
+    }
+
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Eliminar producto",
