@@ -23,6 +23,12 @@ public class Gimnasio {
     @Column(length = 100)
     private String ciudad;
 
+    @Column(name = "latitud")
+    private Double latitud;
+
+    @Column(name = "longitud")
+    private Double longitud;
+
     @Column(name = "es_activo")
     private Boolean esActivo = true;
 
@@ -32,6 +38,9 @@ public class Gimnasio {
     @PrePersist
     protected void onCreate() {
         this.creadoEn = LocalDateTime.now();
+        if (this.esActivo == null) {
+            this.esActivo = true;
+        }
     }
 
     public Gimnasio() {}
@@ -40,6 +49,14 @@ public class Gimnasio {
         this.nombre = nombre;
         this.direccion = direccion;
         this.ciudad = ciudad;
+    }
+
+    public Gimnasio(String nombre, String direccion, String ciudad, Double latitud, Double longitud) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.ciudad = ciudad;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public Long getId() { return id; }
@@ -53,6 +70,12 @@ public class Gimnasio {
 
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }
+
+    public Double getLatitud() { return latitud; }
+    public void setLatitud(Double latitud) { this.latitud = latitud; }
+
+    public Double getLongitud() { return longitud; }
+    public void setLongitud(Double longitud) { this.longitud = longitud; }
 
     public Boolean getEsActivo() { return esActivo; }
     public void setEsActivo(Boolean esActivo) { this.esActivo = esActivo; }

@@ -34,9 +34,11 @@ public class GimnasioController {
 
     @GetMapping("/cercanos")
     public ResponseEntity<ApiResponse<List<Gimnasio>>> obtenerCercanos(
-            @RequestParam(required = false) String ciudad) {
+            @RequestParam(required = false, defaultValue = "Suchiapa") String ciudad,
+            @RequestParam(required = false) Double latitud,
+            @RequestParam(required = false) Double longitud) {
 
-        List<Gimnasio> cercanos = gimnasioService.buscarCercanos(ciudad);
+        List<Gimnasio> cercanos = gimnasioService.buscarCercanos(ciudad, latitud, longitud);
         return ResponseEntity.ok(new ApiResponse<>(true, "Gimnasios cercanos encontrados correctamente", cercanos));
     }
 
