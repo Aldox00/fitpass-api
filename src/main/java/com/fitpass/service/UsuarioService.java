@@ -5,6 +5,7 @@ import com.fitpass.dto.RegisterRequest;
 import com.fitpass.dto.UsuarioResponse;
 import com.fitpass.entity.Usuario;
 import com.fitpass.repository.UsuarioRepository;
+import com.fitpass.security.JwtService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,13 +25,20 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
+    private final JwtService jwtService;
 
     private final Map<String, String> codigosRecuperacion = new HashMap<>();
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender) {
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder,
+            JavaMailSender mailSender,
+            JwtService jwtService
+    ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.jwtService = jwtService;
     }
 
     public UsuarioResponse registrar(RegisterRequest request) {
@@ -47,7 +55,7 @@ public class UsuarioService {
         usuario.setRol(request.getRol() != null ? request.getRol() : "SOCIO");
 
         Usuario guardado = usuarioRepository.save(usuario);
-        return mapToResponse(guardado);
+        return mapToResponseConToken(guardado);
     }
 
     public UsuarioResponse login(LoginRequest request) {
@@ -60,7 +68,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("Credenciales inválidas");
         }
 
-        return mapToResponse(usuario);
+        return mapToResponseConToken(usuario);
     }
 
     public UsuarioResponse loginORegistrarGoogle(String idToken) {
@@ -85,7 +93,7 @@ public class UsuarioService {
             usuario = usuarioRepository.save(usuario);
         }
 
-        return mapToResponse(usuario);
+        return mapToResponseConToken(usuario);
     }
 
     public void enviarCodigoRecuperacion(String email) {
@@ -103,7 +111,7 @@ public class UsuarioService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             helper.setTo(emailLimpio);
-            helper.setFrom("FitPass Soporte <fitpass.oficial@gmail.com>"); // Remitente corporativo
+            helper.setFrom("FitPass Soporte <fitpass.oficial@gmail.com>");
             helper.setSubject("Código de Recuperación - FitPass");
 
             String htmlContent = """
@@ -153,7 +161,6 @@ public class UsuarioService {
         usuario.setPassword(passwordEncoder.encode(nuevaPassword));
         usuarioRepository.save(usuario);
 
-        // Limpiar el código usado de la memoria temporal
         codigosRecuperacion.remove(emailLimpio);
     }
 
@@ -207,6 +214,17 @@ public class UsuarioService {
                 usuario.getNombre(),
                 usuario.getEmail(),
                 usuario.getRol()
+        );
+    }
+
+    private UsuarioResponse mapToResponseConToken(Usuario usuario) {
+        String token = jwtService.generarToken(usuario);
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getEmail(),
+                usuario.getRol(),
+                token
         );
     }
 }

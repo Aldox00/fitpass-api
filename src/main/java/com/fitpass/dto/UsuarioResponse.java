@@ -14,8 +14,11 @@ public class UsuarioResponse {
     @Schema(description = "Correo electrónico", example = "aldo@fitpass.com")
     private String email;
 
-    @Schema(description = "Rol del usuario en el sistema", example = "USUARIO")
+    @Schema(description = "Rol del usuario en el sistema", example = "SOCIO")
     private String rol;
+
+    @Schema(description = "Token JWT de autenticación")
+    private String token;
 
     public UsuarioResponse() {}
 
@@ -24,6 +27,14 @@ public class UsuarioResponse {
         this.nombre = nombre;
         this.email = email;
         this.rol = rol;
+    }
+
+    public UsuarioResponse(Long id, String nombre, String email, String rol, String token) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.rol = rol;
+        this.token = token;
     }
 
     public Long getId() { return id; }
@@ -37,4 +48,7 @@ public class UsuarioResponse {
 
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }
+
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
 }
