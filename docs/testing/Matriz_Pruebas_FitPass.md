@@ -3,6 +3,16 @@
 - **Ambiente:** `https://fitpass-api-production.up.railway.app`
 - **Evidencias:** `docs/testing/evidencias/` (`CP-01.png` a `CP-14.png`)
 - **Autenticación:** `Bearer Token` en endpoints protegidos; `No Auth` en endpoints públicos.
+- **Fecha de pruebas:** 26 de noviembre de 2026
+- **Total de casos:** 14 casos (`CP-01` a `CP-14`) cubriendo camino feliz, validación de datos, lógica de negocio, seguridad y buenas prácticas REST.
+
+## Cobertura por Categoría
+
+- **Camino Feliz / CRUD (`CP-01` a `CP-03`):** Login con JWT, consulta de gimnasios y apartado de producto válido.
+- **Validación de Tipos y Esquemas (`CP-04` a `CP-06`):** Registro con correo y contraseña inválidos, tipo de dato incorrecto (`cantidad: "dos"`) y JSON mal formado.
+- **Lógica de Negocio (`CP-07` a `CP-09`):** Correo duplicado al registrar, consulta de ID inexistente (`99999`) y apartado con stock insuficiente (`cantidad: 9999`).
+- **Seguridad (`CP-10` a `CP-13`):** Petición sin `Bearer Token` (`401`), acceso sin permisos con rol `SOCIO` (`403`), intento de inyección SQL (`' OR 1=1 --`) y revisión de que los errores no expongan *stack traces*, tablas ni datos sensibles.
+- **Buenas Prácticas REST (`CP-14`):** Uso de método `GET`, encabezado `Content-Type: application/json`, cabeceras de seguridad (`nosniff`, `DENY`) y tiempos de respuesta medidos en `ms`.
 
 ## Resultados de Casos de Prueba
 
@@ -29,3 +39,4 @@
 2. **Código HTTP en errores de deserialización JSON (`CP-05`, `CP-06`):** tanto un tipo incorrecto (`cantidad: "dos"`) como un JSON sin cerrar devolvieron `404 Not Found` en lugar de `400 Bad Request`. Aunque el cuerpo JSON es limpio y no expone *stack traces*, conviene mapear esos errores de lectura/deserialización a `400 Bad Request`.
 3. **Código HTTP en recurso no encontrado o parámetro inválido (`CP-08`, `CP-13`):** consultar `/api/v1/gimnasios/99999` o `/api/v1/gimnasios/abc` respondió `500 Internal Server Error` con mensaje genérico (sin fuga de trazas ni estructura de BD). *Recomendación:* mapear recurso no encontrado a `404 Not Found` y error de conversión de parámetro de ruta a `400 Bad Request`.
 4. **Limpieza opcional de datos de prueba:** si deseas mantener limpia la base de datos tras las pruebas, considera eliminar el usuario de prueba `id: 7` (`"josue.com"`) y el apartado `id: 10` creado durante `CP-03`.
+5. **Estado de correcciones:** estos hallazgos quedan documentados tal como se observaron durante las pruebas en el entorno desplegado y se dejan listos para corregirse en el código antes de la siguiente versión.
